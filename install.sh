@@ -11,10 +11,8 @@ ARCH="$(uname -m)"
 case "$OS" in
   Linux)  TARGET="${ARCH}-unknown-linux-gnu" ;;
   Darwin)
-    case "$ARCH" in
-      arm64) TARGET="aarch64-apple-darwin" ;;
-      *)     TARGET="x86_64-apple-darwin" ;;
-    esac
+    [ "$ARCH" = "arm64" ] || { echo "Error: Intel Mac ($ARCH) is not supported."; exit 1; }
+    TARGET="aarch64-apple-darwin"
     ;;
   *) echo "Unsupported OS: $OS"; exit 1 ;;
 esac
