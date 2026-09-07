@@ -1,9 +1,5 @@
-#!/usr/bin/env sh
+#!/bin/sh
 set -e
-
-REPO="realloon/mkrimod"
-BIN="mkrimod"
-DEST="${INSTALL_DIR:-$HOME/.local/bin}"
 
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -17,27 +13,19 @@ case "$OS" in
   *) echo "Unsupported OS: $OS"; exit 1 ;;
 esac
 
-URL="https://github.com/${REPO}/releases/latest/download/${BIN}-${TARGET}.tar.gz"
-
-echo "Downloading ${BIN} for ${TARGET}..."
-TMP_DIR="$(mktemp -d)"
-curl -sSL "$URL" | tar -xz -C "$TMP_DIR"
-BIN_PATH="$(find "$TMP_DIR" -type f -name "$BIN" | head -n 1)"
-
-if [ -z "$BIN_PATH" ]; then
-  echo "Error: Failed to find binary in downloaded archive."
-  rm -rf "$TMP_DIR"
-  exit 1
-fi
-
+DEST="$HOME/.local/bin"
 mkdir -p "$DEST"
-cp -f "$BIN_PATH" "$DEST/$BIN"
-chmod +x "$DEST/$BIN"
-rm -rf "$TMP_DIR"
 
-echo "${BIN} installed successfully to ${DEST}"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
 
+curl -fsSL "https://github.com/realloon/mkrimod/releases/latest/download/mkrimod-${TARGET}.tar.gz" | tar -xz -C "$TMP"
+BIN_PATH="$(find "$TMP" -type f -name mkrimod | head -n 1)"
+cp -f "$BIN_PATH" "$DEST/mkrimod"
+chmod +x "$DEST/mkrimod"
+
+echo "Installed mkrimod to $DEST/mkrimod"
 case ":$PATH:" in
   *":$DEST:"*) ;;
-  *) echo "Note: Add $DEST to your PATH to run ${BIN} directly." ;;
+  *) echo "Add to PATH: export PATH=\"\$HOME/.local/bin:\$PATH\"" ;;
 esac
