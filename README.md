@@ -7,13 +7,13 @@ RimWorld mod project scaffolder.
 ### Linux / macOS
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/realloon/create-rimworld-mod/master/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/realloon/mkrimod/master/install.sh | sh
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/realloon/create-rimworld-mod/master/install.ps1 | iex
+irm https://raw.githubusercontent.com/realloon/mkrimod/master/install.ps1 | iex
 ```
 
 ## Usage

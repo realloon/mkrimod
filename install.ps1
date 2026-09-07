@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$repo = "realloon/create-rimworld-mod"
+$repo = "realloon/mkrimod"
 $bin = "mkrimod"
 $dest = if ($env:CARGO_HOME) { "$env:CARGO_HOME\bin" } else { "$HOME\.local\bin" }
 

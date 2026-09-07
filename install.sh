@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-REPO="realloon/create-rimworld-mod"
+REPO="realloon/mkrimod"
 BIN="mkrimod"
 DEST="${INSTALL_DIR:-/usr/local/bin}"
 
