@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 
 $repo = "realloon/mkrimod"
 $bin = "mkrimod"
-$dest = if ($env:CARGO_HOME) { "$env:CARGO_HOME\bin" } else { "$HOME\.local\bin" }
+$dest = if ($env:INSTALL_DIR) { $env:INSTALL_DIR } else { "$HOME\.local\bin" }
 
 $url = "https://github.com/$repo/releases/latest/download/$bin-x86_64-pc-windows-msvc.zip"
 $zipPath = "$env:TEMP\$bin-$([guid]::NewGuid().ToString('N')).zip"

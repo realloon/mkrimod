@@ -3,13 +3,7 @@ set -e
 
 REPO="realloon/mkrimod"
 BIN="mkrimod"
-if [ -n "$INSTALL_DIR" ]; then
-  DEST="$INSTALL_DIR"
-elif [ -d "$HOME/.cargo/bin" ]; then
-  DEST="$HOME/.cargo/bin"
-else
-  DEST="$HOME/.local/bin"
-fi
+DEST="${INSTALL_DIR:-$HOME/.local/bin}"
 
 OS="$(uname -s)"
 ARCH="$(uname -m)"
