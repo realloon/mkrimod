@@ -76,15 +76,10 @@ fn check_directory_safety(target_dir: &Path, force: bool, interactive: bool) -> 
             "Target directory '{}' is not empty. Continue and potentially overwrite files?",
             target_dir.display()
         );
-        match Confirm::new(&question).with_default(false).prompt() {
-            Ok(true) => return Ok(()),
-            Ok(false) => bail!("Aborted: target directory is not empty"),
-            Err(InquireError::NotTTY) => {}
-            Err(InquireError::OperationCanceled | InquireError::OperationInterrupted) => {
-                bail!("Operation aborted");
-            }
-            Err(e) => return Err(e.into()),
+        if unwrap_prompt(Confirm::new(&question).with_default(false).prompt(), false)? {
+            return Ok(());
         }
+        bail!("Aborted: target directory is not empty");
     }
 
     bail!(

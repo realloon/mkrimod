@@ -2,9 +2,9 @@
 name = "mkrimod"
 version = "0.4.0"
 edition = "2024"
-authors = ["Vortex", "lizhen"]
-description = "Fast native CLI tool to scaffold RimWorld mod projects"
-repository = "https://github.com/realloon/create-rimworld-mod"
+authors = ["Vortex"]
+description = "CLI tool to scaffold RimWorld mod projects"
+repository = "https://github.com/realloon/mkrimod"
 default-run = "mkrimod"
 
 [lib]
@@ -19,13 +19,10 @@ path = "src/main.rs"
 anyhow = "1.0.104"
 clap = { version = "4.6.6", features = ["derive"] }
 colored = "3.1.1"
-include_dir = "0.7.4"
 inquire = "0.9.4"
-
 
 [profile.release]
 opt-level = 3
 lto = true
 codegen-units = 1
 strip = true
-

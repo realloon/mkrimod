@@ -20,15 +20,20 @@ impl ModConfig {
         create_csharp: bool,
         custom_output: Option<PathBuf>,
     ) -> Self {
-        let project_name = match to_pascal_name(raw_project_name) {
-            name if !name.is_empty() => name,
-            _ => Self::DEFAULT_PROJECT_NAME.to_string(),
+        let pascal = to_pascal_name(raw_project_name);
+        let project_name = if pascal.is_empty() {
+            Self::DEFAULT_PROJECT_NAME.to_string()
+        } else {
+            pascal
         };
 
-        let author = match raw_author.trim() {
-            "" => Self::DEFAULT_AUTHOR.to_string(),
-            trimmed => trimmed.to_string(),
-        };
+        let trimmed = raw_author.trim();
+        let author = if trimmed.is_empty() {
+            Self::DEFAULT_AUTHOR
+        } else {
+            trimmed
+        }
+        .to_string();
 
         let target_dir = custom_output.unwrap_or_else(|| {
             std::env::current_dir()
