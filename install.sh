@@ -3,7 +3,13 @@ set -e
 
 REPO="realloon/mkrimod"
 BIN="mkrimod"
-DEST="${INSTALL_DIR:-/usr/local/bin}"
+if [ -n "$INSTALL_DIR" ]; then
+  DEST="$INSTALL_DIR"
+elif [ -d "$HOME/.cargo/bin" ]; then
+  DEST="$HOME/.cargo/bin"
+else
+  DEST="$HOME/.local/bin"
+fi
 
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -30,7 +36,14 @@ if [ -z "$BIN_PATH" ]; then
   exit 1
 fi
 
-install -m 755 "$BIN_PATH" "$DEST" 2>/dev/null || sudo install -m 755 "$BIN_PATH" "$DEST"
+mkdir -p "$DEST"
+cp -f "$BIN_PATH" "$DEST/$BIN"
+chmod +x "$DEST/$BIN"
 rm -rf "$TMP_DIR"
 
 echo "${BIN} installed successfully to ${DEST}"
+
+case ":$PATH:" in
+  *":$DEST:"*) ;;
+  *) echo "Note: Add $DEST to your PATH to run ${BIN} directly." ;;
+esac
