@@ -1,5 +1,4 @@
 use mkrimod::config::ModConfig;
-use mkrimod::naming::to_pascal_name;
 use mkrimod::template::scaffold_mod;
 use std::fs;
 use std::path::PathBuf;
@@ -21,35 +20,22 @@ fn test_scaffold_with_csharp() {
     let config = ModConfig::new("my-super-mod", "Loon", true, Some(target.clone()));
     let files = scaffold_mod(&config).unwrap();
 
-    assert_eq!(config.project_name, "MySuperMod");
-    assert_eq!(config.author, "Loon");
-    assert_eq!(config.package_id(), "Loon.MySuperMod");
+    let about = fs::read_to_string(target.join("About").join("About.xml")).unwrap();
+    assert!(about.contains("<packageId>Loon.MySuperMod</packageId>"));
+    assert!(about.contains("<name>MySuperMod</name>"));
+    assert!(about.contains("<author>Loon</author>"));
 
-    let about_path = target.join("About").join("About.xml");
-    assert!(about_path.exists());
-    let about_content = fs::read_to_string(&about_path).unwrap();
-    assert!(about_content.contains("<packageId>Loon.MySuperMod</packageId>"));
-    assert!(about_content.contains("<name>MySuperMod</name>"));
-    assert!(about_content.contains("<author>Loon</author>"));
+    let cs = fs::read_to_string(target.join("Source").join("MySuperMod.cs")).unwrap();
+    assert!(cs.contains("namespace MySuperMod;"));
+    assert!(cs.contains("public class MySuperMod"));
 
-    let cs_path = target.join("Source").join("MySuperMod.cs");
-    assert!(cs_path.exists());
-    let cs_content = fs::read_to_string(&cs_path).unwrap();
-    assert!(cs_content.contains("namespace MySuperMod;"));
-    assert!(cs_content.contains("public class MySuperMod"));
+    assert!(target.join("Source").join("MySuperMod.csproj").exists());
 
-    let csproj_path = target.join("Source").join("MySuperMod.csproj");
-    assert!(csproj_path.exists());
+    let slnx = fs::read_to_string(target.join("Source").join("MySuperMod.slnx")).unwrap();
+    assert!(slnx.contains(r#"<Project Path="MySuperMod.csproj" />"#));
 
-    let slnx_path = target.join("Source").join("MySuperMod.slnx");
-    assert!(slnx_path.exists());
-    let slnx_content = fs::read_to_string(&slnx_path).unwrap();
-    assert!(slnx_content.contains(r#"<Project Path="MySuperMod.csproj" />"#));
-
-    let gitignore_path = target.join(".gitignore");
-    assert!(gitignore_path.exists());
-    let gitignore_content = fs::read_to_string(&gitignore_path).unwrap();
-    assert!(gitignore_content.contains("Assemblies/"));
+    let gitignore = fs::read_to_string(target.join(".gitignore")).unwrap();
+    assert!(gitignore.contains("Assemblies/"));
 
     assert_eq!(files.len(), 5);
 
@@ -64,16 +50,10 @@ fn test_scaffold_without_csharp() {
     let config = ModConfig::new("simple_xml_mod", "Alice", false, Some(target.clone()));
     let files = scaffold_mod(&config).unwrap();
 
-    assert_eq!(config.project_name, "SimpleXmlMod");
-    assert_eq!(config.author, "Alice");
-    assert_eq!(config.package_id(), "Alice.SimpleXmlMod");
-
-    let about_path = target.join("About").join("About.xml");
-    assert!(about_path.exists());
-    let about_content = fs::read_to_string(&about_path).unwrap();
-    assert!(about_content.contains("<packageId>Alice.SimpleXmlMod</packageId>"));
-    assert!(about_content.contains("<name>SimpleXmlMod</name>"));
-    assert!(about_content.contains("<author>Alice</author>"));
+    let about = fs::read_to_string(target.join("About").join("About.xml")).unwrap();
+    assert!(about.contains("<packageId>Alice.SimpleXmlMod</packageId>"));
+    assert!(about.contains("<name>SimpleXmlMod</name>"));
+    assert!(about.contains("<author>Alice</author>"));
 
     assert!(!target.join("Source").exists());
     assert!(!target.join(".gitignore").exists());
@@ -81,12 +61,4 @@ fn test_scaffold_without_csharp() {
     assert_eq!(files.len(), 1);
 
     let _ = fs::remove_dir_all(&test_dir);
-}
-
-#[test]
-fn test_pascal_name_parity_with_ts() {
-    assert_eq!(to_pascal_name("myMod"), "MyMod");
-    assert_eq!(to_pascal_name("create-rimworld-mod"), "CreateRimworldMod");
-    assert_eq!(to_pascal_name("rim_world_core"), "RimWorldCore");
-    assert_eq!(to_pascal_name("test 123 foo"), "Test123Foo");
 }

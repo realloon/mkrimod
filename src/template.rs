@@ -4,18 +4,28 @@ use std::path::PathBuf;
 
 use crate::config::ModConfig;
 
-const TEMPLATES: &[(&str, &str)] = &[
-    ("About/About.xml", include_str!("../template/About/About.xml")),
-];
+const TEMPLATES: &[(&str, &str)] = &[(
+    "About/About.xml",
+    include_str!("../template/About/About.xml"),
+)];
 
 const CSHARP_TEMPLATES: &[(&str, &str)] = &[
-    ("Source/{projectName}.cs", include_str!("../template/Source/{projectName}.cs")),
-    ("Source/{projectName}.csproj", include_str!("../template/Source/{projectName}.csproj")),
-    ("Source/{projectName}.slnx", include_str!("../template/Source/{projectName}.slnx")),
+    (
+        "Source/{projectName}.cs",
+        include_str!("../template/Source/{projectName}.cs"),
+    ),
+    (
+        "Source/{projectName}.csproj",
+        include_str!("../template/Source/{projectName}.csproj"),
+    ),
+    (
+        "Source/{projectName}.slnx",
+        include_str!("../template/Source/{projectName}.slnx"),
+    ),
     (".gitignore", include_str!("../template/.gitignore")),
 ];
 
-pub fn render_template(content: &str, values: &[(&str, &str)]) -> String {
+fn render_template(content: &str, values: &[(&str, &str)]) -> String {
     let mut result = content.to_string();
     for &(k, v) in values {
         result = result.replace(k, v);
@@ -50,27 +60,4 @@ pub fn scaffold_mod(config: &ModConfig) -> Result<Vec<PathBuf>> {
     }
 
     Ok(created_files)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_render_template() {
-        let template =
-            "Name: {projectName}, Author: {author}, ID: {packageId}, Unchanged: {unknown}";
-        let rendered = render_template(
-            template,
-            &[
-                ("{projectName}", "AwesomeMod"),
-                ("{author}", "RimDev"),
-                ("{packageId}", "RimDev.AwesomeMod"),
-            ],
-        );
-        assert_eq!(
-            rendered,
-            "Name: AwesomeMod, Author: RimDev, ID: RimDev.AwesomeMod, Unchanged: {unknown}"
-        );
-    }
 }

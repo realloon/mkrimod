@@ -36,11 +36,11 @@ pub fn resolve_config(args: &Cli) -> Result<ModConfig> {
 
         (name, auth, csharp)
     } else {
-        let name = args
-            .project_name
-            .clone()
-            .unwrap_or_else(|| ModConfig::DEFAULT_PROJECT_NAME.to_string());
-        (name, args.author.clone(), args.csharp)
+        (
+            args.project_name.clone().unwrap_or_default(),
+            args.author.clone(),
+            args.csharp,
+        )
     };
 
     let config = ModConfig::new(&project_name, &author, create_csharp, args.output.clone());
