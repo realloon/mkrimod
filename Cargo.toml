@@ -1,6 +1,6 @@
 [package]
 name = "mkrimod"
-version = "0.5.1"
+version = "0.5.2"
 edition = "2024"
 authors = ["Vortex"]
 description = "CLI tool to scaffold RimWorld mod projects"
